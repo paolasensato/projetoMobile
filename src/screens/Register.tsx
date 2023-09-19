@@ -1,9 +1,22 @@
 import React, {useState} from 'react';
-import {Alert, SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import axios from '../axios.config';
 import InputText from '../components/InputText';
 import {Button} from 'react-native-paper';
 import {validateEmail, validatePassword} from '../helpers/validation-helper';
+import useFeedbackStore from '../stores/feedback';
+
+const styles = StyleSheet.create({
+  card: {
+    width: 200,
+  },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffc2c2',
+  },
+});
 
 type Input = {
   value: string;
@@ -18,6 +31,7 @@ const Register = ({navigation}: any) => {
     value: '',
     error: '',
   });
+  const {showMessage} = useFeedbackStore();
 
   const handleRegister = async () => {
     try {
@@ -44,49 +58,59 @@ const Register = ({navigation}: any) => {
         password: password.value,
       };
       const {data} = await axios.post('/register', body);
-      Alert.alert('Sucesso', data.message, [
-        {text: 'OK', onPress: () => navigation.navigate('Login')},
-      ]);
+      showMessage({
+        type: 'success',
+        message: data.message,
+        visible: true,
+      });
+      navigation.navigate('Login');
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        'Erro',
-        'Houve um erro ao tentar cadastrar, tente novamente mais tarde!',
-        [{text: 'OK'}],
-      );
+      showMessage({
+        type: 'error',
+        message:
+          'Houve um erro ao realizar operação, tente novamente mais tarde!',
+        visible: true,
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView>
-      <InputText
-        label="E-mail"
-        value={email.value}
-        onChangeText={text => setEmail({value: text, error: ''})}
-        error={!!email.error}
-        textError={email.error}
-      />
-      <InputText
-        label="Senha"
-        value={password.value}
-        onChangeText={text => setPassword({value: text, error: ''})}
-        error={!!password.error}
-        textError={password.error}
-        secureTextEntry
-      />
-      <InputText
-        label="Confirmação de Senha"
-        value={passwordConfirm.value}
-        onChangeText={text => setPasswordConfirm({value: text, error: ''})}
-        error={!!passwordConfirm.error}
-        textError={passwordConfirm.error}
-        secureTextEntry
-      />
-      <Button loading={loading} mode="contained" onPress={handleRegister}>
-        Cadastrar
-      </Button>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.card}>
+        <InputText
+          label="E-mail"
+          mode="outlined"
+          value={email.value}
+          onChangeText={text => setEmail({value: text, error: ''})}
+          error={!!email.error}
+          textError={email.error}
+          theme={{colors: {background: '#fcfafa'}}}
+        />
+        <InputText
+          label="Senha"
+          mode="outlined"
+          value={password.value}
+          onChangeText={text => setPassword({value: text, error: ''})}
+          error={!!password.error}
+          textError={password.error}
+          secureTextEntry
+        />
+        <InputText
+          label="Confirmação de Senha"
+          mode="outlined"
+          value={passwordConfirm.value}
+          onChangeText={text => setPasswordConfirm({value: text, error: ''})}
+          error={!!passwordConfirm.error}
+          textError={passwordConfirm.error}
+          secureTextEntry
+        />
+        <Button loading={loading} mode="contained" onPress={handleRegister}>
+          Cadastrar
+        </Button>
+      </View>
     </SafeAreaView>
   );
 };

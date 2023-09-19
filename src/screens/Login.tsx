@@ -2,15 +2,10 @@ import React, {useState} from 'react';
 import {Button, Text} from 'react-native-paper';
 import InputText from '../components/InputText';
 import {validateEmail, validatePassword} from '../helpers/validation-helper';
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import axios from '../axios.config';
 import useUserStore from '../stores/userStore';
+import useFeedbackStore from '../stores/feedback';
 
 const styles = StyleSheet.create({
   link: {
@@ -31,6 +26,7 @@ const Login = ({navigation}: any) => {
   const [email, setEmail] = useState<Input>({value: '', error: ''});
   const [password, setPassword] = useState<Input>({value: '', error: ''});
   const [loading, setLoading] = useState<boolean>(false);
+  const {showMessage} = useFeedbackStore();
 
   const store = useUserStore();
 
@@ -57,13 +53,11 @@ const Login = ({navigation}: any) => {
       navigation.navigate('Home');
     } catch (error: any) {
       const {response} = error;
-      console.log(response?.data?.message);
-      Alert.alert(
-        'Erro',
-        response?.data?.message ||
-          'Houve um problema ao realizar operação, tente novamente mais tarde!',
-        [{text: 'OK'}],
-      );
+      showMessage({
+        type: 'error',
+        message: response?.data?.message,
+        visible: true,
+      });
     } finally {
       setLoading(false);
     }
