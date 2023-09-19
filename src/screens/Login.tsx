@@ -1,9 +1,16 @@
 import React, {useState} from 'react';
 import {Button, Text} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import InputText from '../components/InputText';
 import {validateEmail, validatePassword} from '../helpers/validation-helper';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import axios from '../axios.config';
+import useUserStore from '../stores/userStore';
 
 const styles = StyleSheet.create({
   link: {
@@ -15,49 +22,71 @@ const styles = StyleSheet.create({
   },
 });
 
-type Email = {
-  value: string;
-  error: string | undefined;
-};
-
-type Password = {
+type Input = {
   value: string;
   error: string | undefined;
 };
 
 const Login = ({navigation}: any) => {
-  const [email, setEmail] = useState<Email>({value: '', error: ''});
-  const [password, setPassword] = useState<Password>({value: '', error: ''});
+  const [email, setEmail] = useState<Input>({value: '', error: ''});
+  const [password, setPassword] = useState<Input>({value: '', error: ''});
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const onSubmit = () => {
-    const emailError = validateEmail(email.value);
-    const passwordError = validatePassword(password.value);
+  const store = useUserStore();
 
-    if (emailError || passwordError) {
-      setEmail({...email, error: emailError});
-      setPassword({...password, error: passwordError});
-      return;
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      const emailError = validateEmail(email.value);
+      const passwordError = validatePassword(password.value);
+
+      if (emailError || passwordError) {
+        setEmail({...email, error: emailError});
+        setPassword({...password, error: passwordError});
+        return;
+      }
+
+      const body = {
+        email: email.value,
+        password: password.value,
+      };
+
+      const {data} = await axios.post('/login', body);
+
+      store.setToken(data.token);
+      navigation.navigate('Home');
+    } catch (error: any) {
+      const {response} = error;
+      console.log(response?.data?.message);
+      Alert.alert(
+        'Erro',
+        response?.data?.message ||
+          'Houve um problema ao realizar operação, tente novamente mais tarde!',
+        [{text: 'OK'}],
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView>
       <InputText
-        label="Email"
+        label="E-mail"
         value={email.value}
         onChangeText={text => setEmail({value: text, error: ''})}
         error={!!email.error}
         textError={email.error}
       />
       <InputText
-        label="Password"
+        label="Senha"
         value={password.value}
         onChangeText={text => setPassword({value: text, error: ''})}
         error={!!password.error}
         textError={password.error}
         secureTextEntry
       />
-      <Button mode="contained" onPress={onSubmit}>
+      <Button loading={loading} mode="contained" onPress={onSubmit}>
         Entrar
       </Button>
 

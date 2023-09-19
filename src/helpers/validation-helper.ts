@@ -15,4 +15,7 @@ export const validatePassword = (text: string) => {
   if (!text || text.length <= 0) {
     return 'Senha não pode ficar em branco';
   }
+  if (text.length < 6) {
+    return 'Senha deve ter mais de 6 caracteres';
+  }
 };
