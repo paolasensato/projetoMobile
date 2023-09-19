@@ -6,16 +6,31 @@ import Register from './src/screens/Register';
 import Home from './src/screens/Home';
 import useUserStore from './src/stores/userStore';
 import Feedback from './src/components/Feedback';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {MD3LightTheme, PaperProvider} from 'react-native-paper';
+
+const theme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: '#27868D',
+    secondary: '#8C4842',
+    tertiary: '#a1b2c3',
+  },
+};
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   const store = useUserStore();
   return (
-    <SafeAreaProvider>
+    <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#e7f6f4',
+            },
+          }}>
           {store.token ? (
             <>
               <Stack.Screen name="Home" component={Home} />
@@ -29,7 +44,7 @@ function App(): JSX.Element {
         </Stack.Navigator>
         <Feedback />
       </NavigationContainer>
-    </SafeAreaProvider>
+    </PaperProvider>
   );
 }
 

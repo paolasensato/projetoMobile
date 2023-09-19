@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 import axios from '../axios.config';
 import InputText from '../components/InputText';
 import {Button} from 'react-native-paper';
@@ -8,13 +8,18 @@ import useFeedbackStore from '../stores/feedback';
 
 const styles = StyleSheet.create({
   card: {
-    width: 200,
+    width: 250,
   },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffc2c2',
+    backgroundColor: '#e7f6f4',
+  },
+  image: {
+    maxWidth: 100,
+    maxHeight: 160,
+    marginBottom: 15,
   },
 });
 
@@ -79,6 +84,12 @@ const Register = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View>
+        <Image
+          style={styles.image}
+          source={require('../assets/totoroSóoPó.png')}
+        />
+      </View>
       <View style={styles.card}>
         <InputText
           label="E-mail"
@@ -87,7 +98,6 @@ const Register = ({navigation}: any) => {
           onChangeText={text => setEmail({value: text, error: ''})}
           error={!!email.error}
           textError={email.error}
-          theme={{colors: {background: '#fcfafa'}}}
         />
         <InputText
           label="Senha"
