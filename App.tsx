@@ -28,7 +28,7 @@ function App(): JSX.Element {
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#e7f6f4',
+              backgroundColor: '#f3faf9',
             },
           }}>
           {store.token ? (
