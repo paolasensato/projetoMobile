@@ -58,19 +58,24 @@ const Register = ({navigation}: any) => {
         setPassword({...password, error: message});
         return;
       }
+
       const body = {
         email: email.value,
         password: password.value,
       };
+
       const {data} = await axios.post('/register', body);
+
       showMessage({
         type: 'success',
         message: data.message,
         visible: true,
       });
+
       navigation.navigate('Login');
     } catch (error) {
       console.log(error);
+
       showMessage({
         type: 'error',
         message:

@@ -5,16 +5,13 @@ const instance = axios.create({
   baseURL: 'https://tamagochiapi-clpsampedro.b4a.run',
 });
 
-axios.interceptors.request.use(
-  request => {
-    const {token} = useUserStore();
+instance.interceptors.request.use(request => {
+  const {token} = useUserStore.getState();
 
-    if (token) {
-      request.headers.Authorization = `Bearer ${token}`;
-    }
-    return request;
-  },
-  error => Promise.reject(error),
-);
+  if (token) {
+    request.headers['x-access-token'] = token;
+  }
+  return request;
+});
 
 export default instance;
