@@ -8,17 +8,19 @@ import useUserStore from './src/stores/userStore';
 import Feedback from './src/components/Feedback';
 import {MD3LightTheme as DefaultTheme, PaperProvider} from 'react-native-paper';
 import {colors} from './src/styles/colors';
+import CreatePet from './src/screens/CreatePet';
 
 const theme = {
   ...DefaultTheme,
   myOwnProperty: true,
   colors: {
     ...DefaultTheme.colors,
-    primary: colors.primary,
+    primary: colors.ternaryContainer,
     secondary: colors.secondary,
     tertiary: colors.tertiary,
-    onSurface: colors.text,
+    onSurface: colors.tertiary,
     error: colors.error,
+    surfaceVariant: colors.onTertiary,
   },
 };
 
@@ -32,12 +34,16 @@ function App(): JSX.Element {
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
-              backgroundColor: '#f3faf9',
+              backgroundColor: '#ffd9dc',
+            },
+            contentStyle: {
+              backgroundColor: '#ffd9dc',
             },
           }}>
           {store.token ? (
             <>
               <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Criar Pet" component={CreatePet} />
             </>
           ) : (
             <>

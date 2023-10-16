@@ -5,8 +5,8 @@ export const colors = {
   secondary: '#8C4842',
   secondary_light: '#a36c67',
   secondary_dark: '#62322e',
-  tertiary: '#ab304a-pç8',
-  text: '#000000',
-  background: '#e7f6f4',
+  tertiary: '#670020',
+  onTertiary: '#ffb2ba',
+  ternaryContainer: '#8a1534',
   error: '#b00020',
 };

@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 
-type FeedbackMessage = {
+export type FeedbackMessage = {
   type: string;
   message: string;
   visible: boolean;

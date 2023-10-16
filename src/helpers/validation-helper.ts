@@ -19,3 +19,9 @@ export const validatePassword = (text: string) => {
     return 'Senha deve ter mais de 6 caracteres';
   }
 };
+
+export const validatePetName = (text: string) => {
+  if (!text || text.length <= 0) {
+    return 'Nome não pode ficar em branco';
+  }
+};
