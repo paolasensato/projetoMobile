@@ -115,7 +115,8 @@ const Login = ({navigation}: any) => {
 
         <View style={styles.registerContainer}>
           <Text>Não possue conta? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Criar Conta')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CreateAccount')}>
             <Text style={styles.link}>Cadastre-se</Text>
           </TouchableOpacity>
         </View>

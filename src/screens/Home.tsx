@@ -23,7 +23,7 @@ const Home = ({navigation}: any) => {
         style={styles.addButton}
         icon="plus"
         mode="contained"
-        onPress={() => navigation.navigate('Criar Pet')}>
+        onPress={() => navigation.navigate('CreatePet')}>
         Adicionar
       </Button>
       <ListPets pets={pets} />

@@ -24,7 +24,14 @@ const theme = {
   },
 };
 
-const Stack = createNativeStackNavigator();
+type StackNavigatorType = {
+  Home: undefined;
+  CreatePet: {petId: number};
+  Login: undefined;
+  CreateAccount: undefined;
+};
+
+const Stack = createNativeStackNavigator<StackNavigatorType>();
 
 function App(): JSX.Element {
   const store = useUserStore();
@@ -43,12 +50,12 @@ function App(): JSX.Element {
           {store.token ? (
             <>
               <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="Criar Pet" component={CreatePet} />
+              <Stack.Screen name="CreatePet" component={CreatePet} />
             </>
           ) : (
             <>
               <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Criar Conta" component={Register} />
+              <Stack.Screen name="CreateAccount" component={Register} />
             </>
           )}
         </Stack.Navigator>

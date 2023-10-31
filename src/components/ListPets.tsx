@@ -37,7 +37,7 @@ type Props = {
 const ListItem = ({id, name, funLevel, life}: PetType) => {
   const {showMessage} = useFeedbackStore();
   const {getPets} = usePetsStore();
-  const {navigate} = useNavigation();
+  const {navigate} = useNavigation<any>();
 
   const left = () => (
     <Image size={80} source={require('../assets/daijin.png')} />
@@ -61,7 +61,7 @@ const ListItem = ({id, name, funLevel, life}: PetType) => {
   );
 
   const handleEdit = () => {
-    navigate('Criar Pet', {petId: id});
+    navigate('CreatePet', {petId: id});
   };
 
   const handleDelete = () => {
