@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, View, StyleSheet} from 'react-native';
 import InputText from '../components/InputText';
 import axios from '../axios.config';
@@ -21,8 +21,10 @@ type Input = {
   error: string | undefined;
 };
 
-const CreatePet = ({navigation}: any) => {
+const CreatePet = ({route, navigation}: any) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const {params} = route;
+  const petId = params?.petId;
 
   const [name, setName] = useState<Input>({value: '', error: ''});
 
@@ -43,12 +45,21 @@ const CreatePet = ({navigation}: any) => {
         name: name.value,
       };
 
-      await axios.post('/pet', body);
-      showMessage({
-        type: 'success',
-        message: 'Pet adicionado com sucesso!',
-        visible: true,
-      });
+      if (petId) {
+        await axios.put(`/pet/${petId}`, body);
+        showMessage({
+          type: 'success',
+          message: 'Pet atualizado com sucesso!',
+          visible: true,
+        });
+      } else {
+        await axios.post('/pet', body);
+        showMessage({
+          type: 'success',
+          message: 'Pet adicionado com sucesso!',
+          visible: true,
+        });
+      }
       getPets();
       navigation.goBack();
     } catch (error: any) {
@@ -61,6 +72,27 @@ const CreatePet = ({navigation}: any) => {
       setLoading(false);
     }
   };
+
+  const loadPet = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (!petId) {
+        return;
+      }
+
+      const {data} = await axios.get(`/pet/${petId}`);
+
+      setName({value: data.name, error: ''});
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [petId]);
+
+  useEffect(() => {
+    loadPet();
+  }, []);
 
   return (
     <SafeAreaView>

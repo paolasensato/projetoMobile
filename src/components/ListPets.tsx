@@ -5,6 +5,7 @@ import usePetsStore from '../stores/pets';
 import {colors} from '../styles/colors';
 import useFeedbackStore from '../stores/feedback';
 import axios from '../axios.config';
+import {useNavigation} from '@react-navigation/native';
 
 const {Title} = Card;
 const {Image} = Avatar;
@@ -36,6 +37,7 @@ type Props = {
 const ListItem = ({id, name, funLevel, life}: PetType) => {
   const {showMessage} = useFeedbackStore();
   const {getPets} = usePetsStore();
+  const {navigate} = useNavigation();
 
   const left = () => (
     <Image size={80} source={require('../assets/daijin.png')} />
@@ -59,7 +61,7 @@ const ListItem = ({id, name, funLevel, life}: PetType) => {
   );
 
   const handleEdit = () => {
-    console.log(id);
+    navigate('Criar Pet', {petId: id});
   };
 
   const handleDelete = () => {
