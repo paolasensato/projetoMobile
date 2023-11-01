@@ -64,6 +64,10 @@ const ListItem = ({id, name, funLevel, life}: PetType) => {
     navigate('CreatePet', {petId: id});
   };
 
+  const handleOnPress = () => {
+    navigate('ViewPet', {petId: id});
+  };
+
   const handleDelete = () => {
     Alert.alert('Alerta!', 'Tem certeza que deseja excluir esse pet?', [
       {
@@ -98,7 +102,7 @@ const ListItem = ({id, name, funLevel, life}: PetType) => {
   };
 
   return (
-    <Card mode="contained" style={styles.cardContent}>
+    <Card mode="contained" style={styles.cardContent} onPress={handleOnPress}>
       <Title
         title={name}
         titleVariant="titleLarge"

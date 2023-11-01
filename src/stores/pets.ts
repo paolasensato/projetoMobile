@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import axios from '../axios.config';
 
-type PetType = {
+export type PetType = {
   id: number;
   name: string;
   restLevel: number;
