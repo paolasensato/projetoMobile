@@ -4,6 +4,8 @@ import {Avatar, Button, Text} from 'react-native-paper';
 import axios from '../axios.config';
 import {PetType} from '../stores/pets';
 import {colors} from '../styles/colors';
+import useFeedbackStore from '../stores/feedback';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {Image} = Avatar;
 
@@ -30,24 +32,38 @@ const styles = StyleSheet.create({
   },
 });
 
-const ViewPet = ({route}: any) => {
+const ViewPet = ({route, navigation}: any) => {
   const {params} = route;
   const petId = params.petId;
   const [pet, setPet] = useState<PetType>();
   const [loading, setLoading] = useState<boolean>(false);
 
+  const {showMessage} = useFeedbackStore();
+
   const getPet = useCallback(async () => {
     try {
       const {data} = await axios.get(`/pet/${petId}`);
       setPet(data);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      const {response} = error;
+      showMessage({
+        type: 'success',
+        message: response.data.message,
+        visible: true,
+      });
+      if (response.status === 404) {
+        navigation.goBack();
+      }
     }
-  }, [petId]);
+  }, [navigation, petId, showMessage]);
 
   useEffect(() => {
     getPet();
   }, [petId]);
+
+  useFocusEffect(() => {
+    getPet();
+  });
 
   const handleFood = async () => {
     try {
@@ -73,16 +89,8 @@ const ViewPet = ({route}: any) => {
     }
   };
 
-  const handleFun = async () => {
-    try {
-      setLoading(true);
-      await axios.post(`/pet/${pet!.id}/play`);
-      getPet();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+  const handleGame = () => {
+    navigation.navigate('Game', {petId: petId});
   };
 
   return (
@@ -116,7 +124,7 @@ const ViewPet = ({route}: any) => {
           loading={loading}
           icon="teddy-bear"
           mode="contained"
-          onPress={handleFun}>
+          onPress={handleGame}>
           Brincar
         </Button>
       </View>

@@ -10,6 +10,7 @@ import {MD3LightTheme as DefaultTheme, PaperProvider} from 'react-native-paper';
 import {colors} from './src/styles/colors';
 import CreatePet from './src/screens/CreatePet';
 import ViewPet from './src/screens/ViewPet';
+import Game from './src/screens/Game';
 
 const theme = {
   ...DefaultTheme,
@@ -31,6 +32,7 @@ type StackNavigatorType = {
   Login: undefined;
   CreateAccount: undefined;
   ViewPet: {petId: number};
+  Game: undefined;
 };
 
 const Stack = createNativeStackNavigator<StackNavigatorType>();
@@ -54,6 +56,7 @@ function App(): JSX.Element {
               <Stack.Screen name="Home" component={Home} />
               <Stack.Screen name="CreatePet" component={CreatePet} />
               <Stack.Screen name="ViewPet" component={ViewPet} />
+              <Stack.Screen name="Game" component={Game} />
             </>
           ) : (
             <>
