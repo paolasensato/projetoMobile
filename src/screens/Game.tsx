@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {Button, Card, Text} from 'react-native-paper';
+import {Button, Card, Text, Avatar} from 'react-native-paper';
 import {colors} from '../styles/colors';
 import axios from '../axios.config';
 import useFeedbackStore from '../stores/feedback';
-
-const {Content} = Card;
 
 const styles = StyleSheet.create({
   container: {
@@ -13,8 +11,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.onTertiary,
     margin: 10,
     borderRadius: 5,
+    paddingTop: 20,
+  },
+  box: {
+    alignItems: 'center',
+    height: 50,
+  },
+  life: {
+    fontSize: 20,
   },
   row: {
+    justifyContent: 'center',
     flexWrap: 'wrap',
     flexDirection: 'row',
   },
@@ -22,17 +29,29 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   card: {
-    width: 100,
-    height: 100,
+    width: 90,
+    height: 120,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  cardContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 80,
+    height: 80,
+  },
+  button: {
+    marginHorizontal: 50,
+    marginTop: 20,
   },
 });
 
 type CardProp = {
   id: number;
   name: string;
-  url?: string;
+  image: any;
   isOpen: boolean;
   isSelected: boolean;
 };
@@ -41,38 +60,86 @@ const Game = ({navigation, route}: any) => {
   const initialCards = [
     {
       id: 1,
-      name: '1',
-      isOpen: false,
+      name: 'Daijin',
+      image: require('../assets/memory/daijin.jpg'),
+      isOpen: true,
       isSelected: false,
     },
     {
       id: 2,
-      name: '1',
-      isOpen: false,
+      name: 'Daijin',
+      image: require('../assets/memory/daijin.jpg'),
+      isOpen: true,
       isSelected: false,
     },
     {
       id: 3,
-      name: '2',
-      isOpen: false,
+      name: 'Sadaijin',
+      image: require('../assets/memory/sadaijin.jpg'),
+      isOpen: true,
       isSelected: false,
     },
     {
       id: 4,
-      name: '2',
-      isOpen: false,
+      name: 'Sadaijin',
+      image: require('../assets/memory/sadaijin.jpg'),
+      isOpen: true,
       isSelected: false,
     },
     {
       id: 5,
-      name: '3',
-      isOpen: false,
+      name: 'Souta',
+      image: require('../assets/memory/souta.jpg'),
+      isOpen: true,
       isSelected: false,
     },
     {
       id: 6,
-      name: '3',
-      isOpen: false,
+      name: 'Souta',
+      image: require('../assets/memory/souta.jpg'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 7,
+      name: 'Suzume',
+      image: require('../assets/memory/suzume.jpg'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 8,
+      name: 'Suzume',
+      image: require('../assets/memory/suzume.jpg'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 9,
+      name: 'Porta',
+      image: require('../assets/memory/porta.png'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 10,
+      name: 'Porta',
+      image: require('../assets/memory/porta.png'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 11,
+      name: 'Serizawa',
+      image: require('../assets/memory/serizawa.jpg'),
+      isOpen: true,
+      isSelected: false,
+    },
+    {
+      id: 12,
+      name: 'Serizawa',
+      image: require('../assets/memory/serizawa.jpg'),
+      isOpen: true,
       isSelected: false,
     },
   ];
@@ -80,7 +147,12 @@ const Game = ({navigation, route}: any) => {
   const shuffledCards = initialCards.sort(() => 0.5 - Math.random());
 
   const [cards, setCards] = useState<CardProp[]>(shuffledCards);
+  const [disabled, setDisabled] = useState<boolean>(false);
   const [buttonVisible, setButtonVisible] = useState<boolean>(false);
+  const [chance, setChance] = useState<number>(5);
+  const [state, setState] = useState<string>();
+
+  const [hasShownCards, setHasShownCards] = useState<boolean>(false);
 
   const {params} = route;
   const petId = params.petId;
@@ -88,10 +160,15 @@ const Game = ({navigation, route}: any) => {
   const {showMessage} = useFeedbackStore();
 
   const openCloseCards = useCallback(() => {
+    if (!hasShownCards) {
+      return;
+    }
     const selectedCards = cards.filter(card => card.isOpen && !card.isSelected);
 
     if (selectedCards.length < 2) {
       return;
+    } else if ((selectedCards.length = 2)) {
+      setDisabled(true);
     }
 
     if (selectedCards[0].name === selectedCards[1].name) {
@@ -100,7 +177,9 @@ const Game = ({navigation, route}: any) => {
           selectedCards.includes(card) ? {...card, isSelected: true} : card,
         ),
       );
+      setDisabled(false);
     } else {
+      setChance(chance - 1);
       setTimeout(() => {
         setCards(
           cards.map(card =>
@@ -108,6 +187,7 @@ const Game = ({navigation, route}: any) => {
           ),
         );
       }, 1000);
+      setDisabled(false);
     }
   }, [cards]);
 
@@ -115,8 +195,15 @@ const Game = ({navigation, route}: any) => {
     openCloseCards();
 
     if (cards.every(card => card.isSelected)) {
+      setState('Você Ganhou!');
       handleFun();
       setButtonVisible(true);
+    }
+    if (chance === 0) {
+      handleFun();
+      setState('Você Perdeu!');
+      setButtonVisible(true);
+      setDisabled(true);
     }
   }, [cards]);
 
@@ -133,7 +220,7 @@ const Game = ({navigation, route}: any) => {
   };
 
   const handleOnPressButton = () => {
-    navigation.navigate('ViewPet', {petId: petId});
+    navigation.navigate('ViewPet', {id: petId});
   };
 
   const handleFun = async () => {
@@ -141,28 +228,58 @@ const Game = ({navigation, route}: any) => {
       await axios.post(`/pet/${petId}/play`);
     } catch (error: any) {
       showMessage({
-        type: 'success',
+        type: 'error',
         message: error.response.data.message,
         visible: true,
       });
     }
   };
 
+  useEffect(() => {
+    if (hasShownCards) {
+      return;
+    }
+    setTimeout(() => {
+      setCards(cards.map(card => ({...card, isOpen: false})));
+    }, 4000);
+
+    setHasShownCards(true);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.box}>
+        {state ? (
+          <Text style={styles.life}>{state}</Text>
+        ) : (
+          <Text style={styles.life}>{`Vidas: ${chance}`}</Text>
+        )}
+      </View>
+
       <View style={styles.row}>
         {cards.map(card => (
-          <View style={styles.col}>
-            <Card style={styles.card} onPress={() => handleOnPress(card)}>
-              <Content>
-                <Text>{card.isOpen ? card.name : '?'}</Text>
-              </Content>
+          <View key={card.id} style={styles.col}>
+            <Card
+              disabled={disabled}
+              style={styles.card}
+              onPress={() => handleOnPress(card)}>
+              {!card.isOpen ? (
+                <Text>?</Text>
+              ) : (
+                <View style={styles.cardContent}>
+                  <Avatar.Image size={80} source={card.image} />
+                  <Text>{card.name}</Text>
+                </View>
+              )}
             </Card>
           </View>
         ))}
       </View>
       {buttonVisible ? (
-        <Button onPress={() => handleOnPressButton()} mode="contained">
+        <Button
+          style={styles.button}
+          onPress={() => handleOnPressButton()}
+          mode="contained">
           Concluir
         </Button>
       ) : null}

@@ -12,8 +12,8 @@ const {Image} = Avatar;
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    margin: 10,
-    padding: 10,
+    margin: 4,
+    padding: 5,
     borderRadius: 5,
     backgroundColor: colors.onTertiary,
     justifyContent: 'space-evenly',
@@ -56,10 +56,6 @@ const ViewPet = ({route, navigation}: any) => {
       }
     }
   }, [navigation, petId, showMessage]);
-
-  useEffect(() => {
-    getPet();
-  }, [petId]);
 
   useFocusEffect(() => {
     getPet();
@@ -108,6 +104,7 @@ const ViewPet = ({route, navigation}: any) => {
       <View style={styles.cardActions}>
         <Button
           loading={loading}
+          disabled={loading}
           icon="silverware"
           mode="contained"
           onPress={handleFood}>
@@ -115,6 +112,7 @@ const ViewPet = ({route, navigation}: any) => {
         </Button>
         <Button
           loading={loading}
+          disabled={loading}
           icon="sleep"
           mode="contained"
           onPress={handleSleep}>
@@ -122,6 +120,7 @@ const ViewPet = ({route, navigation}: any) => {
         </Button>
         <Button
           loading={loading}
+          disabled={loading}
           icon="teddy-bear"
           mode="contained"
           onPress={handleGame}>
