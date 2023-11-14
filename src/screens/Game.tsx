@@ -151,7 +151,7 @@ const Game = ({navigation, route}: any) => {
   const [cards, setCards] = useState<CardProp[]>(shuffledCards);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [buttonVisible, setButtonVisible] = useState<boolean>(false);
-  const [chance, setChance] = useState<number>(5);
+  const [chance, setChance] = useState<number>(3);
   const [state, setState] = useState<string>();
 
   const [hasShownCards, setHasShownCards] = useState<boolean>(false);
@@ -222,7 +222,7 @@ const Game = ({navigation, route}: any) => {
   };
 
   const handleOnPressButton = () => {
-    navigation.navigate('ViewPet', {id: petId});
+    navigation.navigate('ViewPet', {petId: petId});
   };
 
   const handleFun = async () => {

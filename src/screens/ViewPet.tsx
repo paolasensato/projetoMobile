@@ -47,7 +47,7 @@ const ViewPet = ({route, navigation}: any) => {
     } catch (error: any) {
       const {response} = error;
       showMessage({
-        type: 'success',
+        type: 'error',
         message: response.data.message,
         visible: true,
       });
@@ -86,7 +86,7 @@ const ViewPet = ({route, navigation}: any) => {
   };
 
   const handleGame = () => {
-    navigation.navigate('Game', {petId: petId});
+    navigation.navigate('Game', {petId: pet!.id});
   };
 
   return (
