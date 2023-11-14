@@ -10,7 +10,7 @@ const Feedback = () => {
   };
 
   return (
-    <Snackbar visible={visible} onDismiss={handleDismiss}>
+    <Snackbar duration={2000} visible={visible} onDismiss={handleDismiss}>
       {message}
     </Snackbar>
   );

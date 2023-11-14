@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {Button, Card, Text, Avatar} from 'react-native-paper';
+import {SafeAreaView, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {Button, Text, Avatar} from 'react-native-paper';
 import {colors} from '../styles/colors';
 import axios from '../axios.config';
 import useFeedbackStore from '../stores/feedback';
@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     height: 120,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
   cardContent: {
     justifyContent: 'center',
@@ -167,7 +169,7 @@ const Game = ({navigation, route}: any) => {
 
     if (selectedCards.length < 2) {
       return;
-    } else if ((selectedCards.length = 2)) {
+    } else if (selectedCards.length === 2) {
       setDisabled(true);
     }
 
@@ -186,8 +188,8 @@ const Game = ({navigation, route}: any) => {
             selectedCards.includes(card) ? {...card, isOpen: false} : card,
           ),
         );
+        setDisabled(false);
       }, 1000);
-      setDisabled(false);
     }
   }, [cards]);
 
@@ -239,8 +241,12 @@ const Game = ({navigation, route}: any) => {
     if (hasShownCards) {
       return;
     }
+
+    setDisabled(true);
+
     setTimeout(() => {
       setCards(cards.map(card => ({...card, isOpen: false})));
+      setDisabled(false);
     }, 4000);
 
     setHasShownCards(true);
@@ -259,10 +265,10 @@ const Game = ({navigation, route}: any) => {
       <View style={styles.row}>
         {cards.map(card => (
           <View key={card.id} style={styles.col}>
-            <Card
+            <TouchableOpacity
               disabled={disabled}
-              style={styles.card}
-              onPress={() => handleOnPress(card)}>
+              onPress={() => handleOnPress(card)}
+              style={styles.card}>
               {!card.isOpen ? (
                 <Text>?</Text>
               ) : (
@@ -271,7 +277,7 @@ const Game = ({navigation, route}: any) => {
                   <Text>{card.name}</Text>
                 </View>
               )}
-            </Card>
+            </TouchableOpacity>
           </View>
         ))}
       </View>
