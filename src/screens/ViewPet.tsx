@@ -40,7 +40,7 @@ const ViewPet = ({route, navigation}: any) => {
 
   const {showMessage} = useFeedbackStore();
 
-  const getPet = useCallback(async () => {
+  const getPet = async () => {
     try {
       const {data} = await axios.get(`/pet/${petId}`);
       setPet(data);
@@ -55,11 +55,16 @@ const ViewPet = ({route, navigation}: any) => {
         navigation.goBack();
       }
     }
-  }, [navigation, petId, showMessage]);
+  };
 
-  useFocusEffect(() => {
-    getPet();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      getPet();
+      return () => {
+        getPet();
+      };
+    }, []),
+  );
 
   const handleFood = async () => {
     try {
